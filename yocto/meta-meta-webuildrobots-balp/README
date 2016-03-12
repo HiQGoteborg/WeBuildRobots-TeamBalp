@@ -9,25 +9,24 @@ Dependencies
 
 This layer depends on:
 
-  URI: git://git.openembedded.org/bitbake
+  URI: git://git.yoctoproject.org/poky
   branch: master
+  revision: HEAD
 
-  URI: git://git.openembedded.org/openembedded-core
-  layers: meta
+  URI: git://git.openembedded.org/meta-openembedded
+  layers: meta-oe, meta-multimedia
   branch: master
+  revision: HEAD
 
-  URI: git://git.yoctoproject.org/xxxx
-  layers: xxxx
+  URI: http://git.yoctoproject.org/cgit/cgit.cgi/meta-raspberrypi/
+  layers: meta-raspberrypi
   branch: master
 
 
 Patches
 =======
 
-Please submit any patches against the meta-webuildrobots-balp layer to the
-xxxx mailing list (xxxx@zzzz.org) and cc: the maintainer:
-
-Maintainer: XXX YYYYYY <xxx.yyyyyy@zzzzz.com>
+We use github for this code. please send pull requests there.
 
 
 Table of Contents
@@ -54,6 +53,7 @@ other layers needed. e.g.:
     /path/to/yocto/meta \
     /path/to/yocto/meta-yocto \
     /path/to/yocto/meta-yocto-bsp \
+    /path/to/yocto/meta-raspberrypi \
     /path/to/yocto/meta-meta-webuildrobots-balp \
     "
 
@@ -61,4 +61,3 @@ other layers needed. e.g.:
 II. Misc
 ========
 
---- replace with specific information about the meta-webuildrobots-balp layer ---
