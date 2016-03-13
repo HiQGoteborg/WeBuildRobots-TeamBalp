@@ -22,10 +22,12 @@ PV = "3.1+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 
-#EXTRA_OECMAKE = "-DPYTHON2_NUMPY_INCLUDE_DIRS:PATH=${STAGING_LIBDIR}/${PYTHON_DIR}/site-packages/numpy/core/include \
-#		 -DOPENCV_EXTRA_MODULES_PATH=${WORKDIR}/contrib/modules \
-#                 -DWITH_1394=OFF \
-#                 -DCMAKE_SKIP_RPATH=ON \
+EXTRA_OECMAKE = "-DPYTHON2_NUMPY_INCLUDE_DIRS:PATH=${STAGING_LIBDIR}/${PYTHON_DIR}/site-packages/numpy/core/include \
+		 -DOPENCV_EXTRA_MODULES_PATH=${WORKDIR}/contrib/modules \
+                 -DWITH_1394=OFF \
+                 -DCMAKE_SKIP_RPATH=ON \
+"
+
 #                 ${@bb.utils.contains("TARGET_CC_ARCH", "-msse3", "-DENABLE_SSE=1 -DENABLE_SSE2=1 -DENABLE_SSE3=1 -DENABLE_SSSE3=1", "", d)} \
 #                 ${@bb.utils.contains("TARGET_CC_ARCH", "-msse4.1", "-DENABLE_SSE=1 -DENABLE_SSE2=1 -DENABLE_SSE3=1 -DENABLE_SSSE3=1 -DENABLE_SSE41=1", "", d)} \
 #                 ${@bb.utils.contains("TARGET_CC_ARCH", "-msse4.2", "-DENABLE_SSE=1 -DENABLE_SSE2=1 -DENABLE_SSE3=1 -DENABLE_SSSE3=1 -DENABLE_SSE41=1 -DENABLE_SSE42=1", "", d)} \
@@ -65,7 +67,8 @@ export ANT_DIR="${STAGING_DIR_NATIVE}/usr/share/ant/"
 
 TARGET_CC_ARCH += "-I${S}/include "
 
-PACKAGES += "${PN}-java-dbg ${PN}-java ${PN}-samples-dbg ${PN}-samples ${PN}-apps python-opencv"
+PACKAGES += "${PN}-apps python-opencv"
+#PACKAGES += "${PN}-java-dbg ${PN}-java ${PN}-samples-dbg ${PN}-samples ${PN}-apps python-opencv"
 
 python populate_packages_prepend () {
     cv_libdir = d.expand('${libdir}')
@@ -103,10 +106,10 @@ FILES_${PN}-apps = "${bindir}/* ${datadir}/OpenCV"
 FILES_${PN}-dbg += "${libdir}/.debug"
 FILES_${PN}-dev = "${includedir} ${libdir}/pkgconfig"
 FILES_${PN}-doc = "${datadir}/OpenCV/doc"
-FILES_${PN}-java = "${datadir}/OpenCV/java"
-FILES_${PN}-java-dbg = "${datadir}/OpenCV/java/.debug/"
-FILES_${PN}-samples = "${datadir}/OpenCV/samples/"
-FILES_${PN}-samples-dbg = "${datadir}/OpenCV/samples/bin/.debug"
+#FILES_${PN}-java = "${datadir}/OpenCV/java"
+#FILES_${PN}-java-dbg = "${datadir}/OpenCV/java/.debug/"
+#FILES_${PN}-samples = "${datadir}/OpenCV/samples/"
+#FILES_${PN}-samples-dbg = "${datadir}/OpenCV/samples/bin/.debug"
 
 INSANE_SKIP_${PN}-apps = "staticdev"
 INSANE_SKIP_${PN}-java = "libdir"
