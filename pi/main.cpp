@@ -15,8 +15,9 @@ int main ( int argc,char **argv ) {
     time_t timer_begin,timer_end;
     raspicam::RaspiCam_Cv Camera;
     cv::Mat image;
+    cv::Mat filtered;
     EdgeDetector edgeDetector;
-    int nCount=100;
+    int nCount=10;
     //set camera params
     Camera.set( CV_CAP_PROP_FORMAT, CV_8UC1 );
     //Open camera
@@ -28,7 +29,7 @@ int main ( int argc,char **argv ) {
     for ( int i=0; i<nCount; i++ ) {
         Camera.grab();
         Camera.retrieve ( image);
-        cv::Mat filtered = edgeDetector.filter(image);
+        filtered = edgeDetector.filter(image);
         if ( i%5==0 )  cout<<"\r captured "<<i<<" images"<<std::flush;
     }
     cout<<"Stop camera..."<<endl;
