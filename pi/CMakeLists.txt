@@ -6,6 +6,7 @@ find_package(OpenCV)
 IF  ( OpenCV_FOUND AND raspicam_CV_FOUND)
 
     add_subdirectory( edgeDetect )
+    include_directories( edgeDetect )
     add_executable( robotctrl main.cpp )
 
     target_link_libraries (robotctrl ${raspicam_CV_LIBS} edgedetect )

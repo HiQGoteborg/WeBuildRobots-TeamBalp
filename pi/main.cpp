@@ -28,7 +28,7 @@ int main ( int argc,char **argv ) {
     for ( int i=0; i<nCount; i++ ) {
         Camera.grab();
         Camera.retrieve ( image);
-        Mat filtered = edgeDetector.filter(image);
+        cv::Mat filtered = edgeDetector.filter(image);
         if ( i%5==0 )  cout<<"\r captured "<<i<<" images"<<std::flush;
     }
     cout<<"Stop camera..."<<endl;
