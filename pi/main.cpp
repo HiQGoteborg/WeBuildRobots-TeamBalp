@@ -6,12 +6,70 @@
 #include <iostream>
 #include <raspicam/raspicam_cv.h>
 #include <opencv2/opencv.hpp>
+
+#include <unistd.h>				//Needed for I2C port
+#include <fcntl.h>				//Needed for I2C port
+#include <sys/ioctl.h>			//Needed for I2C port
+#include <linux/i2c-dev.h>		//Needed for I2C port
+
 #include "EdgeDetector.h"
 
 using namespace std; 
- 
+
+int file_i2c;
+const int arduino_address = 0x04;
+
+void openi2c() {
+    //----- OPEN THE I2C BUS -----
+    char *filename = (char*)"/dev/i2c-1";
+    if ((file_i2c = open(filename, O_RDWR)) < 0)
+    {
+        //ERROR HANDLING: you can check errno to see what went wrong
+        printf("Failed to open the i2c bus");
+        return;
+    }
+
+    int addr = arduino_address;          //<<<<<The I2C address of the slave
+    if (ioctl(file_i2c, I2C_SLAVE, addr) < 0)
+    {
+        printf("Failed to acquire bus access and/or talk to slave.\n");
+        //ERROR HANDLING; you can check errno to see what went wrong
+        return;
+    }
+}
+
+void readi2c()
+{
+    unsigned char buffer[60] = {0};
+    //----- READ BYTES -----
+    const int length = 1;			//<<< Number of bytes to read
+    if (read(file_i2c, buffer, length) != length)
+    {
+        //ERROR HANDLING: i2c transaction failed
+        printf("Failed to read from the i2c bus.\n");
+    }
+    else
+    {
+        printf("Data read: %d\n", buffer);
+    }
+}
+
+void writei2c() 
+{
+    unsigned char buffer[60] = {0};
+    //----- WRITE BYTES -----
+    buffer[0] = 0x01;
+    buffer[1] = 0x02;
+    const int length = 1;			//<<< Number of bytes to write
+    if (write(file_i2c, buffer, length) != length)
+    {
+        /* ERROR HANDLING: i2c transaction failed */
+        printf("Failed to write to the i2c bus.\n");
+    }
+}
 int main ( int argc,char **argv ) {
    
+    openi2c();
     time_t timer_begin,timer_end;
     raspicam::RaspiCam_Cv Camera;
     cv::Mat image;
@@ -32,6 +90,8 @@ int main ( int argc,char **argv ) {
         Camera.grab();
         Camera.retrieve ( image);
         filtered = edgeDetector.filter(image);
+        writei2c();
+        readi2c();
         if ( i%5==0 )  cout<<"\r captured "<<i<<" images"<<std::flush;
     }
     cout<<"Stop camera..."<<endl;
@@ -41,6 +101,7 @@ int main ( int argc,char **argv ) {
     double secondsElapsed = difftime ( timer_end,timer_begin );
     cout<< secondsElapsed<<" seconds for "<< nCount<<"  frames : FPS = "<<  ( float ) ( ( float ) ( nCount ) /secondsElapsed ) <<endl;
     //save image 
-    cv::imwrite("raspicam_cv_image.jpg",filtered);
+    cv::imwrite("raspicam_cv_image.jpg",image);
+    cv::imwrite("raspicam_cv_image_filtered.jpg",filtered);
     cout<<"Image saved at raspicam_cv_image.jpg"<<endl;
 }
