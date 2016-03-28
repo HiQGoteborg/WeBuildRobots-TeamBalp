@@ -1,0 +1,6 @@
+
+pi/build/
+pi/raspicam_cv_image.jpg
+*.prof
+*~
+*.swp

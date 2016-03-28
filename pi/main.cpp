@@ -19,7 +19,9 @@ int main ( int argc,char **argv ) {
     EdgeDetector edgeDetector;
     int nCount=10;
     //set camera params
-    Camera.set( CV_CAP_PROP_FORMAT, CV_8UC1 );
+    Camera.set( CV_CAP_PROP_FRAME_WIDTH, 256 );
+    Camera.set( CV_CAP_PROP_FRAME_HEIGHT, 256 );
+    Camera.set( CV_CAP_PROP_FORMAT, CV_8UC3 );
     //Open camera
     cout<<"Opening Camera..."<<endl;
     if (!Camera.open()) {cerr<<"Error opening the camera"<<endl;return -1;}
