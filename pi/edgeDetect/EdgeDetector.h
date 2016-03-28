@@ -14,7 +14,7 @@ public:
     cv::Mat filter(cv::Mat);
 
     EdgeDetector() : factor(10.0), cutoffpoint(40) {
-        edgeDetectionMatrix = (Mat_<char>(5, 5) <<
+        edgeDetectionMatrix = (cv::Mat_<char>(5, 5) <<
                                -1, -1, -1, -1, -1,
             -1,  0,  0,  0, -1,
             -1,  0, 16,  0, -1,
@@ -25,8 +25,8 @@ public:
 private:
     double factor;
     int cutoffpoint;
-    Mat edgeDetected;
-    Mat edgeDetectionMatrix;
+    cv::Mat edgeDetected;
+    cv::Mat edgeDetectionMatrix;
 };
 
 
