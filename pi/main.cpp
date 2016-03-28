@@ -25,14 +25,14 @@ void openi2c() {
     if ((file_i2c = open(filename, O_RDWR)) < 0)
     {
         //ERROR HANDLING: you can check errno to see what went wrong
-        printf("Failed to open the i2c bus");
+        cerr << "Failed to open the i2c bus" << endl;
         return;
     }
 
     int addr = arduino_address;          //<<<<<The I2C address of the slave
     if (ioctl(file_i2c, I2C_SLAVE, addr) < 0)
     {
-        printf("Failed to acquire bus access and/or talk to slave.\n");
+        cerr << "Failed to acquire bus access and/or talk to slave." << endl;
         //ERROR HANDLING; you can check errno to see what went wrong
         return;
     }
@@ -46,11 +46,11 @@ void readi2c()
     if (read(file_i2c, buffer, length) != length)
     {
         //ERROR HANDLING: i2c transaction failed
-        printf("Failed to read from the i2c bus.\n");
+        cerr << "Failed to read from the i2c bus." << endl;
     }
     else
     {
-        printf("Data read: %d\n", buffer);
+        cout << "Data read: " << (int) buffer[0] << endl;
     }
 }
 
@@ -64,7 +64,7 @@ void writei2c()
     if (write(file_i2c, buffer, length) != length)
     {
         /* ERROR HANDLING: i2c transaction failed */
-        printf("Failed to write to the i2c bus.\n");
+        cerr << "Failed to write to the i2c bus." << endl;
     }
 }
 int main ( int argc,char **argv ) {
