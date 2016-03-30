@@ -1,0 +1,6 @@
+[submodule "Arduino/arduino-cmake"]
+	path = Arduino/arduino-cmake
+	url = https://github.com/queezythegreat/arduino-cmake.git
+[submodule "Arduino/arduino-mock"]
+	path = Arduino/arduino-mock
+	url = https://github.com/balp/arduino-mock.git
