@@ -1,4 +1,7 @@
 
+Arduino/build/
+Arduino/build_host/
+Arduino/build_target/
 pi/build/
 pi/raspicam_cv_image.jpg
 *.prof
