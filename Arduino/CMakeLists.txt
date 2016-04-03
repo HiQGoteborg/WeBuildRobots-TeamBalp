@@ -16,11 +16,11 @@ endif()
 project(WeBuildRobots)
 
 if(ARDUINO_FOUND)
-    include_directories( avr-stl/include )
+    set( RedBot_RECURSE True)
 
     generate_arduino_firmware(webuildrobots
 	HDRS timer.h
-	SRCS main.cpp drive.cpp
+	SRCS main.cpp webuild.cpp
 	PORT ${BOARDPORT}
 	BOARD uno
     )
