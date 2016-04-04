@@ -19,8 +19,8 @@ if(ARDUINO_FOUND)
     set( RedBot_RECURSE True)
 
     generate_arduino_firmware(webuildrobots
-	HDRS timer.h
-	SRCS main.cpp webuild.cpp
+	HDRS timer.h communication.h
+	SRCS main.cpp webuild.cpp communication.cpp
 	PORT ${BOARDPORT}
 	BOARD uno
     )
@@ -30,6 +30,7 @@ else()
     getExternalProject("gmock" "https://googlemock.googlecode.com/files/gmock-1.7.0.zip")
     include_directories(${CMAKE_SOURCE_DIR} arduino-mock/)
     add_subdirectory(arduino-mock)
+
     add_executable(timer_test
         timer.h
         test/timer_test.cpp
@@ -39,4 +40,16 @@ else()
     linkExternalProject(timer_test "gtest")
     linkExternalProject(timer_test "gmock")
     add_test(AllTestsForTimer timer_test  --gtest_color=on --gtest_output=xml)
+
+    add_executable(communication_test
+        communication.h
+        communication.cpp
+        test/communication_test.cpp
+        test/main.cpp
+        )
+    target_link_libraries(communication_test arduino-mock pthread )
+    linkExternalProject(communication_test "gtest")
+    linkExternalProject(communication_test "gmock")
+    add_test(AllTestsForTimer communication_test  --gtest_color=on --gtest_output=xml)
+
 endif()

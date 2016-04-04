@@ -2,7 +2,9 @@
 
 class Communication {
     public:
-	void receiveData(int byteCount) {}
+        virtual ~Communication() {}
+	void receiveData(int byteCount);
 	void sendData() {}
+    private:
 
 };
