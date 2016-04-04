@@ -28,6 +28,12 @@ void setup()
   pinMode(13, OUTPUT);
   Serial.begin(9600); 
   Wire.begin(SLAVE_ADDRESS);
+  for( int i = 0 ; i < 10 ; ++i) {
+      digitalWrite(13, HIGH);
+      delay(250);
+      digitalWrite(13, LOW);
+      delay(250);
+  }
 
   //  motors.drive(255);   // Turn on Left and right motors at full speed forward.
   //  delay(2000);         // Waits for 2 seconds

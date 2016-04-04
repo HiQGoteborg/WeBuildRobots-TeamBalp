@@ -16,5 +16,5 @@ if [[ ! -d build_target ]];
 then
   mkdir build_target
 fi
-( cd build_target && cmake -DBOARDPORT=/dev/tty.usbmodem621 -DCMAKE_TOOLCHAIN_FILE=../arduino-cmake/cmake/ArduinoToolchain.cmake .. && make $* )
+( cd build_target && cmake -DBOARDPORT=/dev/tty.usbserial-A104ONU5 -DCMAKE_TOOLCHAIN_FILE=../arduino-cmake/cmake/ArduinoToolchain.cmake .. && make $* )
 
