@@ -42,7 +42,7 @@ void readi2c()
 {
     unsigned char buffer[60] = {0};
     //----- READ BYTES -----
-    const int length = 1;			//<<< Number of bytes to read
+    const int length = 2;			//<<< Number of bytes to read
     if (read(file_i2c, buffer, length) != length)
     {
         //ERROR HANDLING: i2c transaction failed
@@ -50,7 +50,55 @@ void readi2c()
     }
     else
     {
-        cout << "Data read: " << (int) buffer[0] << endl;
+        cout << "Data read: " << (int) buffer[0] << "," << (int)buffer[1] << endl;
+    }
+}
+
+void forward(uint8_t speed)
+{
+    unsigned char buffer[3] = {0};
+    buffer[0] = 0x01;
+    buffer[1] = speed;
+    const int length = 2;			//<<< Number of bytes to write
+    if (write(file_i2c, buffer, length) != length) {
+        /* ERROR HANDLING: i2c transaction failed */
+        cerr << "Failed to write to the i2c bus." << endl;
+    }
+}
+
+void right(uint8_t speed)
+{
+    unsigned char buffer[3] = {0};
+    buffer[0] = 0x02;
+    buffer[1] = speed;
+    const int length = 2;			//<<< Number of bytes to write
+    if (write(file_i2c, buffer, length) != length) {
+        /* ERROR HANDLING: i2c transaction failed */
+        cerr << "Failed to write to the i2c bus." << endl;
+    }
+}
+
+void left(uint8_t speed)
+{
+    unsigned char buffer[3] = {0};
+    buffer[0] = 0x03;
+    buffer[1] = speed;
+    const int length = 2;			//<<< Number of bytes to write
+    if (write(file_i2c, buffer, length) != length) {
+        /* ERROR HANDLING: i2c transaction failed */
+        cerr << "Failed to write to the i2c bus." << endl;
+    }
+}
+
+void stop()
+{
+    unsigned char buffer[3] = {0};
+    buffer[0] = 0x04;
+    buffer[1] = 0x00;
+    const int length = 2;			//<<< Number of bytes to write
+    if (write(file_i2c, buffer, length) != length) {
+        /* ERROR HANDLING: i2c transaction failed */
+        cerr << "Failed to write to the i2c bus." << endl;
     }
 }
 
@@ -59,8 +107,8 @@ void writei2c()
     unsigned char buffer[60] = {0};
     //----- WRITE BYTES -----
     buffer[0] = 0x01;
-    buffer[1] = 0x02;
-    const int length = 1;			//<<< Number of bytes to write
+    buffer[1] = 0xff;
+    const int length = 2;			//<<< Number of bytes to write
     if (write(file_i2c, buffer, length) != length)
     {
         /* ERROR HANDLING: i2c transaction failed */
@@ -75,7 +123,7 @@ int main ( int argc,char **argv ) {
     cv::Mat image;
     cv::Mat filtered;
     EdgeDetector edgeDetector;
-    int nCount=10;
+    int nCount=20;
     //set camera params
     Camera.set( CV_CAP_PROP_FRAME_WIDTH, 256 );
     Camera.set( CV_CAP_PROP_FRAME_HEIGHT, 256 );
@@ -86,20 +134,42 @@ int main ( int argc,char **argv ) {
     //Start capture
     cout<<"Capturing "<<nCount<<" frames ...."<<endl;
     time ( &timer_begin );
+forward(255);
+    readi2c();
     for ( int i=0; i<nCount; i++ ) {
         Camera.grab();
         Camera.retrieve ( image);
         filtered = edgeDetector.filter(image);
-        writei2c();
-        readi2c();
         if ( i%5==0 )  cout<<"\r captured "<<i<<" images"<<std::flush;
     }
+stop();
+    readi2c();
+right(200);
+    readi2c();
+    for ( int i=0; i<nCount; i++ ) {
+        Camera.grab();
+        Camera.retrieve ( image);
+        filtered = edgeDetector.filter(image);
+        if ( i%5==0 )  cout<<"\r captured "<<i<<" images"<<std::flush;
+    }
+stop();
+    readi2c();
+left(100);
+    readi2c();
+    for ( int i=0; i<nCount; i++ ) {
+        Camera.grab();
+        Camera.retrieve ( image);
+        filtered = edgeDetector.filter(image);
+        if ( i%5==0 )  cout<<"\r captured "<<i<<" images"<<std::flush;
+    }
+stop();
+    readi2c();
     cout<<"Stop camera..."<<endl;
     Camera.release();
     //show time statistics
     time ( &timer_end ); /* get current time; same as: timer = time(NULL)  */
     double secondsElapsed = difftime ( timer_end,timer_begin );
-    cout<< secondsElapsed<<" seconds for "<< nCount<<"  frames : FPS = "<<  ( float ) ( ( float ) ( nCount ) /secondsElapsed ) <<endl;
+    cout<< secondsElapsed<<" seconds for "<< nCount<<"  frames : FPS = "<<  ( float ) ( ( float ) ( nCount*3 ) /secondsElapsed ) <<endl;
     //save image 
     cv::imwrite("raspicam_cv_image.jpg",image);
     cv::imwrite("raspicam_cv_image_filtered.jpg",filtered);
