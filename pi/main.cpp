@@ -79,7 +79,7 @@ int main ( int argc,char **argv ) {
     //set camera params
     Camera.set( CV_CAP_PROP_FRAME_WIDTH, 256 );
     Camera.set( CV_CAP_PROP_FRAME_HEIGHT, 256 );
-    Camera.set( CV_CAP_PROP_FORMAT, CV_8UC3 );
+    Camera.set( CV_CAP_PROP_FORMAT, CV_8UC1 );
     //Open camera
     cout<<"Opening Camera..."<<endl;
     if (!Camera.open()) {cerr<<"Error opening the camera"<<endl;return -1;}
