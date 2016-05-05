@@ -1,6 +1,7 @@
 #include "communication.h"
 #include "gmock/gmock.h"
 #include "Arduino.h"
+#include "Serial.h"
 #include "Wire.h"
 
 using ::testing::Return;
@@ -18,15 +19,18 @@ class CommunicationTest : public ::testing::Test {
 */
     RedBotMotorsMock* redbotMotorMock;
     ArduinoMock* arduinoMock;
+    SerialMock* serialMock;
     WireMock* wireMock;
     CommunicationTest() :
         redbotMotorMock( redbotMotorInstance() ),
         arduinoMock( arduinoMockInstance() ),
+        serialMock( serialMockInstance() ),
         wireMock( WireMockInstance() )
         {}
     virtual ~CommunicationTest() {
         releaseRedbotMock();
         releaseArduinoMock();
+        releaseSerialMock();
         releaseWireMock();
     }
 };

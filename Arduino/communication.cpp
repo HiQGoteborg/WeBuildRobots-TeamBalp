@@ -8,7 +8,13 @@ void Communication::receiveData(int byteCount)
 {
     while(Wire.available()) {
         int number = Wire.read();
-        printf("... %d\n", number);
+        Serial.print(" got ");
+        Serial.print(number);
+        Serial.print(" state ");
+        Serial.print(_state);
+        Serial.print(" data ");
+        Serial.print(_cmd);
+        Serial.println(" i2c");
         if(_state == cmd) {
             switch (number) {
                 case 0:
@@ -43,7 +49,7 @@ void Communication::receiveData(int byteCount)
                 case drive:
                     {
                     _motors->drive(number);
-                    printf("*** drive %p %d\n", _motors, number);
+                    Serial.println("*** drive");
                     uint8_t version[] = {0,0};
                     Wire.write(version, sizeof(version));
                     }
@@ -51,15 +57,15 @@ void Communication::receiveData(int byteCount)
                 case right:
                     {
                     _motors->rightMotor(number);
-                    printf("*** rightMotor %p %d\n", _motors, number);
+                    Serial.println("*** rightMotor");
                     uint8_t version[] = {0,0};
                     Wire.write(version, sizeof(version));
                     }
                     break;
                 case left:
                     {
-                    _motors->leftMotor(number);
-                    printf("*** leftMotor %p %d\n", _motors, number);
+                    _motors->leftMotor(-number);
+                    Serial.println("*** leftMotor");
                     uint8_t version[] = {0,0};
                     Wire.write(version, sizeof(version));
                     }
@@ -67,12 +73,13 @@ void Communication::receiveData(int byteCount)
                 case stop:
                     {
                     _motors->stop();
-                    printf("*** stop %p %d\n", _motors, number);
+                    Serial.println("*** stop ");
                     uint8_t version[] = {0,0};
                     Wire.write(version, sizeof(version));
                     }
                     break;
             }
+            _state = cmd;
         }
     }
 }
