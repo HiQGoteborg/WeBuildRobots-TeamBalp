@@ -134,42 +134,27 @@ int main ( int argc,char **argv ) {
     //Start capture
     cout<<"Capturing "<<nCount<<" frames ...."<<endl;
     time ( &timer_begin );
-forward(255);
+    stop();
     readi2c();
+
     for ( int i=0; i<nCount; i++ ) {
         Camera.grab();
         Camera.retrieve ( image);
         filtered = edgeDetector.filter(image);
+        cv::Mat dst;
+        cv::reduce(filtered, dst, 0, CV_REDUCE_AVG);
+        cout << cv::sum(dst) << endl;
         if ( i%5==0 )  cout<<"\r captured "<<i<<" images"<<std::flush;
     }
-stop();
+    stop();
     readi2c();
-right(200);
-    readi2c();
-    for ( int i=0; i<nCount; i++ ) {
-        Camera.grab();
-        Camera.retrieve ( image);
-        filtered = edgeDetector.filter(image);
-        if ( i%5==0 )  cout<<"\r captured "<<i<<" images"<<std::flush;
-    }
-stop();
-    readi2c();
-left(100);
-    readi2c();
-    for ( int i=0; i<nCount; i++ ) {
-        Camera.grab();
-        Camera.retrieve ( image);
-        filtered = edgeDetector.filter(image);
-        if ( i%5==0 )  cout<<"\r captured "<<i<<" images"<<std::flush;
-    }
-stop();
-    readi2c();
-    cout<<"Stop camera..."<<endl;
-    Camera.release();
     //show time statistics
     time ( &timer_end ); /* get current time; same as: timer = time(NULL)  */
     double secondsElapsed = difftime ( timer_end,timer_begin );
-    cout<< secondsElapsed<<" seconds for "<< nCount<<"  frames : FPS = "<<  ( float ) ( ( float ) ( nCount*3 ) /secondsElapsed ) <<endl;
+    cout << secondsElapsed<<" seconds for "
+         << nCount<<"  frames : FPS = "
+         << ( float ) ( ( float ) ( nCount*3 ) /secondsElapsed )
+         << endl;
     //save image 
     cv::imwrite("raspicam_cv_image.jpg",image);
     cv::imwrite("raspicam_cv_image_filtered.jpg",filtered);
